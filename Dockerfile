@@ -3,6 +3,9 @@ FROM apache/superset:latest
 # Switching to root to install the required packages
 USER root
 
+# For oauth
+RUN pip install authlib
+
 # Install base drivers required for helm chart to work
 RUN pip install psycopg2==2.8.5
 RUN pip install redis==3.2.1
