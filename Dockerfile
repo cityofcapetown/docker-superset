@@ -7,7 +7,14 @@ USER root
 RUN pip install authlib
 
 # For web reports
-RUN pi install gevent
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt install -y ./google-chrome-stable_current_amd64.deb && \
+    wget https://chromedriver.storage.googleapis.com/88.0.4324.96/chromedriver_linux64.zip && \
+    unzip chromedriver_linux64.zip && \
+    chmod +x chromedriver && \
+    mv chromedriver /usr/bin && \
+    rm -f google-chrome-stable_current_amd64.deb chromedriver_linux64.zip && \
+    pip install gevent
 
 # Install base drivers required for helm chart to work
 RUN pip install psycopg2==2.8.5
