@@ -6,15 +6,19 @@ USER root
 # For oauth
 RUN pip install authlib
 
-# For web reports
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    apt install -y ./google-chrome-stable_current_amd64.deb && \
-    wget https://chromedriver.storage.googleapis.com/88.0.4324.96/chromedriver_linux64.zip && \
-    unzip chromedriver_linux64.zip && \
-    chmod +x chromedriver && \
-    mv chromedriver /usr/bin && \
-    rm -f google-chrome-stable_current_amd64.deb chromedriver_linux64.zip && \
-    pip install gevent
+# For alerts and reports
+RUN apt-get update && \
+    wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    apt-get install -y --no-install-recommends ./google-chrome-stable_current_amd64.deb && \
+    rm -f google-chrome-stable_current_amd64.deb
+
+RUN export CHROMEDRIVER_VERSION=$(curl --silent https://chromedriver.storage.googleapis.com/LATEST_RELEASE_88) && \
+    wget -q https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip && \
+    unzip chromedriver_linux64.zip -d /usr/bin && \
+    chmod 755 /usr/bin/chromedriver && \
+    rm -f chromedriver_linux64.zip
+
+RUN pip install --no-cache gevent psycopg2 redis
 
 # Install base drivers required for helm chart to work
 RUN pip install psycopg2==2.8.5 \
