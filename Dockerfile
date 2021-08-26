@@ -1,4 +1,4 @@
-FROM apache/superset:f6fe29db87424356c3f12d48406a76f813ce4366
+FROM apache/superset:970d7627797fe2b96f797e413b27f09484b80c7b
 
 # Switching to root to install the required packages
 USER root
