@@ -39,5 +39,11 @@ RUN pip install psycopg2==2.8.5 \
 # Elastisearch
  && pip install elasticsearch-dbapi
 
+# Install prophet for forecasting functionality
+# Install pystan with pip before using pip to install prophet
+# pystan>=3.0 is currently not supported
+RUN pip install pystan==2.19.1.1 \
+ && pip install prophet 
+
 # Switching back to using the `superset` user
 USER superset
