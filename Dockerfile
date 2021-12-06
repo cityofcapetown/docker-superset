@@ -1,5 +1,5 @@
 #FROM apache/superset:b35645c3f4db8526c12ef88d9056a348fcc1f249
-FROM apache/superset:1.3.1
+FROM apache/superset:1.3.2
 
 # Switching to root to install the required packages
 USER root
