@@ -14,7 +14,7 @@ RUN apt-get update && \
     rm -f google-chrome-stable_current_amd64.deb && \
     apt-get install -y redis-server
 
-RUN export CHROMEDRIVER_VERSION=$(curl --silent https://chromedriver.storage.googleapis.com/LATEST_RELEASE_94) && \
+RUN export CHROMEDRIVER_VERSION=$(curl --silent https://chromedriver.storage.googleapis.com/LATEST_RELEASE_96) && \
     wget -q https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip && \
     unzip chromedriver_linux64.zip -d /usr/bin && \
     chmod 755 /usr/bin/chromedriver && \
