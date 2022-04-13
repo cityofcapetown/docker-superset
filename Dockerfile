@@ -24,8 +24,8 @@ RUN export CHROMEDRIVER_VERSION=$(curl --silent https://chromedriver.storage.goo
 RUN pip install --no-cache gevent psycopg2 redis
 
 # Install base drivers required for helm chart to work
-#RUN pip install psycopg2==2.8.5 \
-# && pip install redis==3.2.1 \
+RUN pip install psycopg2==2.9.3 \
+ && pip install redis==4.2.2 \
 RUN pip install psycopg2 \
  && pip install redis \
 # Install database connectors
