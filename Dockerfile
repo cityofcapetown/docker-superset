@@ -1,7 +1,4 @@
-#FROM apache/superset:b35645c3f4db8526c12ef88d9056a348fcc1f249
-#FROM apache/superset:1.5.0rc2
-#FROM apache/superset:1.4.1
-FROM apache/superset:latest
+FROM apache/superset:1.4.2
 
 # Switching to root to install the required packages
 USER root
@@ -27,8 +24,6 @@ RUN pip install --no-cache gevent psycopg2 redis
 # Install base drivers required for helm chart to work
 RUN pip install psycopg2==2.9.1 \
  && pip install redis==3.5.3 \
-#RUN pip install psycopg2 \
-# && pip install redis \
 # Install database connectors
 # Find which driver you need based on the analytics database
 # you want to connect to here:
