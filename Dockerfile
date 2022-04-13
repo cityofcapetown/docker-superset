@@ -26,8 +26,6 @@ RUN pip install --no-cache gevent psycopg2 redis
 # Install base drivers required for helm chart to work
 RUN pip install psycopg2==2.9.3 \
  && pip install redis==4.2.2 \
-RUN pip install psycopg2 \
- && pip install redis \
 # Install database connectors
 # Find which driver you need based on the analytics database
 # you want to connect to here:
