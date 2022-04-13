@@ -1,6 +1,6 @@
 #FROM apache/superset:b35645c3f4db8526c12ef88d9056a348fcc1f249
-#FROM apache/superset:1.4.2
-FROM apache/superset:1.4.1
+FROM apache/superset:1.4.2
+#FROM apache/superset:1.4.1
 
 # Switching to root to install the required packages
 USER root
@@ -24,8 +24,10 @@ RUN export CHROMEDRIVER_VERSION=$(curl --silent https://chromedriver.storage.goo
 RUN pip install --no-cache gevent psycopg2 redis
 
 # Install base drivers required for helm chart to work
-RUN pip install psycopg2==2.8.5 \
- && pip install redis==3.2.1 \
+#RUN pip install psycopg2==2.8.5 \
+# && pip install redis==3.2.1 \
+RUN pip install psycopg2 \
+ && pip install redis \
 # Install database connectors
 # Find which driver you need based on the analytics database
 # you want to connect to here:
