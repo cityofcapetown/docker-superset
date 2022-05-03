@@ -1,5 +1,5 @@
-#FROM apache/superset:1.5.0rc2
-FROM apache/superset:latest
+FROM apache/superset:1.5.0
+#FROM apache/superset:latest
 
 # Switching to root to install the required packages
 USER root
