@@ -46,7 +46,7 @@ RUN pip install pystan==2.19.1.1 \
  && pip install prophet
 
 # Pinning various packages to fix dependency issues
-RUN pip3 install --force-reinstall alembic==1.6.5 apache-superset==1.5.3 markupsafe==2.0.1 pyopenssl==22.1.0
+RUN pip3 install --force-reinstall alembic==1.6.5 markupsafe==2.0.1 pyopenssl==22.1.0 apache-superset==1.5.3 
 
 # Switching back to using the `superset` user
 USER superset
