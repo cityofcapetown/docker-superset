@@ -45,8 +45,8 @@ RUN pip install psycopg2==2.9.1 \
 RUN pip install pystan==2.19.1.1 \
  && pip install prophet
 
-RUN pip install uninstall alembic \
- && pip install alembic
+# Insatlling alembic to address error on startup
+RUN pip install alembic
 
 # Switching back to using the `superset` user
 USER superset
