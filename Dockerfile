@@ -45,8 +45,8 @@ RUN pip install psycopg2==2.9.1 \
 RUN pip install pystan==2.19.1.1 \
  && pip install prophet
 
-# Insatlling alembic to address error on startup and pinning markupsafe image
-RUN pip3 install --force-reinstall alembic==1.6.5 apache-superset==1.5.3 markupsafe==2.0.1
+# Pinning various packages to fix dependency issues
+RUN pip3 install --force-reinstall alembic==1.6.5 apache-superset==1.5.3 markupsafe==2.0.1 pyopenssl==22.1.0
 
 # Switching back to using the `superset` user
 USER superset
