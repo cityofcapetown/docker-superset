@@ -19,10 +19,14 @@ RUN export CHROMEDRIVER_VERSION=$(curl --silent https://chromedriver.storage.goo
     chmod 755 /usr/bin/chromedriver && \
     rm -f chromedriver_linux64.zip
 
-RUN pip install --no-cache gevent psycopg2 redis
+# Pinning various packages to fix dependency issues
+RUN pip3 install --no-cache --force-reinstall alembic==1.6.5 markupsafe==2.0.1 pyopenssl==22.1.0 apache-superset==1.5.3 
+
+RUN pip install --no-cache gevent
 
 # Install base drivers required for helm chart to work
-RUN pip install psycopg2==2.9.1 \
+RUN pip install gevent \
+ && pip install psycopg2==2.9.1 \
  && pip install redis==3.5.3 \
 # Install database connectors
 # Find which driver you need based on the analytics database
@@ -44,9 +48,6 @@ RUN pip install psycopg2==2.9.1 \
 # pystan>=3.0 is currently not supported
 RUN pip install pystan==2.19.1.1 \
  && pip install prophet
-
-# Pinning various packages to fix dependency issues
-RUN pip3 install --force-reinstall alembic==1.6.5 markupsafe==2.0.1 pyopenssl==22.1.0 apache-superset==1.5.3 
 
 # Switching back to using the `superset` user
 USER superset
