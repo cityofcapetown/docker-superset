@@ -46,14 +46,14 @@ RUN pip install pystan==2.19.1.1 \
  && pip install prophet
 
 # Insatlling alembic to address error on startup and pinning markupsafe image
-RUN pip3 install --force-reinstall pyrsistent>=0.16.1,<0.17 \
+RUN pip3 install --force-reinstall "pyrsistent>=0.16.1,<0.17" \
                                    zipp==3.4.1 \
                                    sasl==0.3.1 \
                                    wrapt==1.12.1 \
                                    "sqlalchemy!=1.3.21,<1.4,>=1.3.16" \
                                    "typing-extensions<4,>=3.10" \
                                    holidays==0.10.3 \
-                                   alembic-1.6.5alembic==alembic-1.6.5
+                                   alembic==1.6.5
 
 # Switching back to using the `superset` user
 USER superset
