@@ -46,7 +46,7 @@ RUN pip install pystan==2.19.1.1 \
  && pip install prophet
 
 # Insatlling alembic to address error on startup
-RUN pip install alembic
+RUN pip install --upgrade --force-reinstall alembic
 
 # Switching back to using the `superset` user
 USER superset
