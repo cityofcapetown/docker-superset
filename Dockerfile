@@ -18,10 +18,7 @@ RUN export CHROMEDRIVER_VERSION=$(curl --silent https://chromedriver.storage.goo
     unzip chromedriver_linux64.zip -d /usr/bin && \
     chmod 755 /usr/bin/chromedriver && \
     rm -f chromedriver_linux64.zip
-
-# Pinning various packages to fix dependency issues
-RUN pip3 install --no-cache --force-reinstall alembic==1.6.5 markupsafe==2.0.1 pyopenssl==22.1.0 apache-superset==1.5.3 
-
+    
 RUN pip install --no-cache gevent
 
 # Install base drivers required for helm chart to work
@@ -48,6 +45,9 @@ RUN pip install gevent \
 # pystan>=3.0 is currently not supported
 RUN pip install pystan==2.19.1.1 \
  && pip install prophet
+
+# Pinning various packages to fix dependency issues
+RUN pip3 install --no-cache --no-deps --force-reinstall alembic==1.6.5 markupsafe==2.0.1 pyopenssl==22.1.0 
 
 # Switching back to using the `superset` user
 USER superset
