@@ -45,8 +45,9 @@ RUN pip install psycopg2==2.9.1 \
 RUN pip install pystan==2.19.1.1 \
  && pip install prophet
 
-# Insatlling alembic to address error on startup
-RUN pip install --upgrade --force-reinstall alembic
+# Insatlling alembic to address error on startup and pinning markupsafe image
+RUN pip install --upgrade --force-reinstall alembic \
+ && pip install markupsafe==2.0.1
 
 # Switching back to using the `superset` user
 USER superset
