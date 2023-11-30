@@ -46,7 +46,7 @@ RUN pip install pystan==2.19.1.1 \
  && pip install prophet
 
 # Insatlling alembic to address error on startup and pinning markupsafe image
-RUN pip3 install --force-reinstall alembic==1.6.5 apache-superset==1.5.3
+RUN pip3 install --force-reinstall alembic==1.6.5 apache-superset==1.5.3 markupsafe==2.0.1
 
 # Switching back to using the `superset` user
 USER superset
