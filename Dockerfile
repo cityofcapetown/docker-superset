@@ -43,7 +43,10 @@ RUN pip install psycopg2==2.9.1 \
 # Install pystan with pip before using pip to install prophet
 # pystan>=3.0 is currently not supported
 RUN pip install pystan==2.19.1.1 \
- && pip install prophet 
+ && pip install prophet
+
+RUN pip install uninstall alembic \
+ && pip install alembic
 
 # Switching back to using the `superset` user
 USER superset
