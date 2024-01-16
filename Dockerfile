@@ -7,13 +7,14 @@ USER root
 RUN pip install authlib
 
 # For alerts and reports
+ARG CHROME_VERSION=109.0.5414.119-1
+
 RUN apt-get update && \
-    wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    wget -q https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb && \
     apt-get install -y --no-install-recommends ./google-chrome-stable_current_amd64.deb && \
     rm -f google-chrome-stable_current_amd64.deb && \
-    apt-get install -y redis-server
-
-RUN export CHROMEDRIVER_VERSION=$(curl --silent https://chromedriver.storage.googleapis.com/LATEST_RELEASE_120) && \
+    apt-get install -y redis-server && \
+    export CHROMEDRIVER_VERSION=$(curl --silent https://chromedriver.storage.googleapis.com/LATEST_RELEASE_109) && \
     wget -q https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip && \
     unzip chromedriver_linux64.zip -d /usr/bin && \
     chmod 755 /usr/bin/chromedriver && \
