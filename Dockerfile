@@ -10,6 +10,7 @@ RUN pip install authlib
 ARG CHROME_VERSION=109.0.5414.119-1
 
 RUN apt-get update && \
+    apt-get install wget && \
     wget -q https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb && \
     apt-get install -y --no-install-recommends ./google-chrome-stable_${CHROME_VERSION}_amd64.deb && \
     rm -f google-chrome-stable_${CHROME_VERSION}_amd64.deb && \
@@ -63,7 +64,7 @@ RUN pip install pystan==2.19.1.1 \
  && pip install prophet
 
 # Pinning various packages to fix dependency issues
-RUN pip3 install --no-cache --no-deps --force-reinstall alembic==1.11.1 markupsafe==2.0.1 pyopenssl==22.1.0 importlib-metadata==4.13.0 importlib-resources==5.12.0 sqlalchemy==1.3.23
+# RUN pip3 install --no-cache --no-deps --force-reinstall alembic==1.11.1 markupsafe==2.0.1 pyopenssl==22.1.0 importlib-metadata==4.13.0 importlib-resources==5.12.0 sqlalchemy==1.3.23
 
 # Switching back to using the `superset` user
 USER superset
