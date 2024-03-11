@@ -74,5 +74,8 @@ RUN pip install gevent \
 RUN pip install pystan==2.19.1.1 \
  && pip install prophet
 
+# Resolving various dependency issues
+RUN pip install holidays=='<0.18,>=0.17.2'
+
 # Switching back to using the `superset` user
 USER superset
