@@ -75,7 +75,7 @@ RUN pip install pystan==2.19.1.1 \
  && pip install prophet
 
 # Resolving various dependency issues
-RUN pip install 'holidays<0.18,>=0.17.2'
+RUN pip install 'holidays<0.18,>=0.17.2' 'redis<5.0,>=4.5.4'
 
 # Switching back to using the `superset` user
 USER superset
