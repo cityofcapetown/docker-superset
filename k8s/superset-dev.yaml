@@ -303,7 +303,7 @@ spec:
 ---
 # Source: superset/templates/deployment-beat.yaml
 apiVersion: apps/v1
-kind: Statefulset
+kind: Deployment
 metadata:
   name: superset-celerybeat
   namespace: "superset-dev"
@@ -335,7 +335,7 @@ spec:
           -timeout 120s
         envFrom:
         - secretRef:
-            name: 'superset-env'
+            name: 'superset-dev-env'
         image: 'apache/superset:dockerize'
         imagePullPolicy: 'IfNotPresent'
         name: wait-for-postgres-redis
@@ -343,7 +343,7 @@ spec:
         - name: "superset-celerybeat"
           image: "cityofcapetown/superset:dev"
           imagePullPolicy: Always
-          command: ["/bin/sh","-c",". /app/pythonpath/superset_bootstrap.sh; celery --app=superset.tasks.celery_app:app beat --pidfile /tmp/celerybeat.pid --schedule /tmp/celerybeat-schedule"]
+          command: ["/bin/sh","-c","ls -l; celery --app=superset.tasks.celery_app:app beat --pidfile /tmp/celerybeat.pid --schedule /tmp/celerybeat-schedule"]
           env:
             - name: "SUPERSET_PORT"
               value: "8088"
@@ -363,7 +363,7 @@ spec:
               value: "False"
           envFrom:
             - secretRef:
-                name: "superset-env"
+                name: "superset-dev-env"
           volumeMounts:
             - name: superset-config
               mountPath: "/app/pythonpath"
@@ -372,8 +372,8 @@ spec:
             {}
       volumes:
         - name: superset-config
-          secret:
-            secretName: superset-config
+          configMap:
+            name: superset-config
 ---
 # Source: superset/templates/deployment-worker.yaml
 apiVersion: apps/v1
@@ -408,7 +408,7 @@ spec:
           -timeout 120s
         envFrom:
         - secretRef:
-            name: 'superset-env'
+            name: 'superset-dev-env'
         image: 'apache/superset:dockerize'
         imagePullPolicy: 'IfNotPresent'
         name: wait-for-postgres-redis
@@ -416,7 +416,7 @@ spec:
         - name: superset
           image: "cityofcapetown/superset:dev"
           imagePullPolicy: Always
-          command: ["/bin/sh","-c",". /app/pythonpath/superset_bootstrap.sh; celery --app=superset.tasks.celery_app:app worker"]
+          command: ["/bin/sh","-c","ls -l; celery --app=superset.tasks.celery_app:app worker"]
           env:
             - name: "SUPERSET_PORT"
               value: "8088"
@@ -436,7 +436,7 @@ spec:
               value: "False"
           envFrom:
             - secretRef:
-                name: "superset-env"
+                name: "superset-dev-env"
           volumeMounts:
             - name: superset-config
               mountPath: "/app/pythonpath"
@@ -456,8 +456,8 @@ spec:
             {}
       volumes:
         - name: superset-config
-          secret:
-            secretName: superset-config
+          configMap:
+            name: superset-config
 ---
 # Source: superset/templates/deployment.yaml
 apiVersion: apps/v1
@@ -491,7 +491,7 @@ spec:
         - dockerize -wait "tcp://$DB_HOST:$DB_PORT" -timeout 120s
         envFrom:
         - secretRef:
-            name: 'superset-env'
+            name: 'superset-dev-env'
         image: 'apache/superset:dockerize'
         imagePullPolicy: 'IfNotPresent'
         name: wait-for-postgres
@@ -499,7 +499,7 @@ spec:
         - name: superset
           image: "cityofcapetown/superset:dev"
           imagePullPolicy: Always
-          command: ["/bin/sh","-c",". /app/pythonpath/superset_bootstrap.sh; /usr/bin/run-server.sh"]
+          command: ["/bin/sh","-c","ls -l; /usr/bin/run-server.sh"]
           env:
             - name: "SUPERSET_PORT"
               value: "8088"
@@ -519,7 +519,7 @@ spec:
               value: "False"
           envFrom:
             - secretRef:
-                name: "superset-env"
+                name: "superset-dev-env"
           volumeMounts:
             - name: superset-config
               mountPath: "/app/pythonpath"
@@ -638,12 +638,12 @@ spec:
             - name: POSTGRES_POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: superset-postgresql
+                  name: superset-dev-postgresql
                   key: postgres-password
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: superset-postgresql
+                  name: superset-dev-postgresql
                   key: password
             - name: POSTGRES_DB
               value: "superset"
@@ -906,7 +906,7 @@ spec:
         - dockerize -wait "tcp://$DB_HOST:$DB_PORT" -timeout 120s
         envFrom:
         - secretRef:
-            name: 'superset-env'
+            name: 'superset-dev-env'
         image: 'apache/superset:dockerize'
         imagePullPolicy: 'IfNotPresent'
         name: wait-for-postgres
@@ -930,17 +930,23 @@ spec:
             value: "False"
         envFrom:
           - secretRef:
-              name: superset-env
+              name: superset-dev-env
         imagePullPolicy: Always
         volumeMounts:
           - name: superset-config
             mountPath: "/app/pythonpath"
             readOnly: true
-        command: ["/bin/sh","-c",". /app/pythonpath/superset_bootstrap.sh; . /app/pythonpath/superset_init.sh"]
+          - name: superset-dev-bootstrap-config
+            mountPath: "/app/initpath"
+            readOnly: true
+        command: ["/bin/sh","-c","ls -l; . /app/initpath/superset_init.sh"]
         resources:
           {}
       volumes:
         - name: superset-config
           configMap:
-            config: superset-config
+            name: superset-config
+        - name: superset-dev-bootstrap-config
+          secret:
+            secretName: superset-dev-bootstrap-config
       restartPolicy: Never

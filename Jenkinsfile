@@ -54,6 +54,7 @@ podTemplate(label: label, yaml: """
             if (env.BRANCH_NAME != 'main') {
                 container('kubectl') {
                     sh '''
+                    kubectl delete configmap superset-config -n superset-dev
                     kubectl create configmap superset-config -n superset-dev --from-file=${PWD}/configs/superset_config.py
                     '''
                 }
@@ -65,14 +66,14 @@ podTemplate(label: label, yaml: """
                 container('kubectl') {
                     sh '''
                     # swap out the docker image tag for the current branch
-                    DOCKER_IMAGE_NAME="superset"
                     export SAFE_BRANCH_NAME=$(echo $BRANCH_NAME | sed 's#/#-#g')
-                    sed -i "s|image: cityofcapetown/\${DOCKER_IMAGE_NAME}:dev|image: cityofcapetown/\${DOCKER_IMAGE_NAME}:\${SAFE_BRANCH_NAME}|" ${PWD}/k8s/superset-dev.yaml
+                    sed -i 's|image: "cityofcapetown/superset:dev"|image: "cityofcapetown/superset:'${SAFE_BRANCH_NAME}'"|g" ${PWD}/k8s/superset-dev.yaml
+                    grep "image:" ${PWD}/k8s/superset-dev.yaml
 
-                    kubectl rollout restart statefulset -n superset-dev superset-redis-master superset-postgresql superset-celerybeat
-                    kubectl rollout restart deployment -n superset-dev superset-worker superset
-                    kubectl rollout status statefulset -n superset-dev superset-redis-master superset-postgresql superset-celerybeat --timeout=300s
-                    kubectl rollout status deployment -n superset-dev superset-worker superset --timeout=300s
+                    kubectl rollout restart statefulset -n superset-dev superset-redis-master superset-postgresql
+                    kubectl rollout restart deployment -n superset-dev superset-worker superset superset-celerybeat
+                    kubectl rollout status statefulset -n superset-dev superset-redis-master superset-postgresql --timeout=300s
+                    kubectl rollout status deployment -n superset-dev superset-worker superset superset-celerybeat --timeout=300s
                     '''
                 }
                 updateGitlabCommitStatus name: 'deploy', state: 'success'

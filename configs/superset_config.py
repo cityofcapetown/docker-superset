@@ -46,7 +46,7 @@ RESULTS_BACKEND = RedisCache(
 # alerts_and_reports
 from celery.schedules import crontab
 
-REDIS_HOST = 'superset-dev-redis-headless'
+REDIS_HOST = 'superset-redis-headless'
 REDIS_PORT = '6379'
 
 
@@ -177,7 +177,7 @@ def auth_driver(driver, user):
 
 WEBDRIVER_AUTH_FUNC = auth_driver
 
-REDIS_HOST = 'superset-dev-redis-headless'
+REDIS_HOST = 'superset-redis-headless'
 REDIS_PORT = '6379'
 
 THUMBNAIL_CACHE_CONFIG: CacheConfig = {
@@ -200,21 +200,6 @@ FEATURE_FLAGS = {
     "DASHBOARD_NATIVE_FILTERS": True,
     "DASHBOARD_CROSS_FILTERS": True,
     "ENABLE_JAVASCRIPT_CONTROLS": True}
-
-# redirect_landing
-from flask import Flask, redirect
-from flask_appbuilder import expose, IndexView
-
-from superset.superset_typing import FlaskResponse
-
-
-class SupersetDashboardIndexView(IndexView):
-    @expose("/")
-    def index(self) -> FlaskResponse:
-        return redirect("/dashboard/list/")
-
-
-FAB_INDEX_VIEW = f"{SupersetDashboardIndexView.__module__}.{SupersetDashboardIndexView.__name__}"
 
 # row_limit
 # this increases the row limit to 2M
