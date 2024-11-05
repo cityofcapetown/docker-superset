@@ -24,6 +24,7 @@ podTemplate(label: label, yaml: """
         tty: true
       nodeSelector:
         workload: batch
+      serviceAccountName: superset-dev
     """,
     slaveConnectTimeout: 3600
   ) {
