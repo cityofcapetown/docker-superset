@@ -30,7 +30,7 @@ podTemplate(label: label, yaml: """
   ) {
     node(label) {
         stage('setup') {
-            git branch: env.BRANCH_NAME, credentialsId: 'jenkins-user', url: 'https://ds1.capetown.gov.za/ds_gitlab/OPM/docker-superset.git'
+            git branch: env.BRANCH_NAME, credentialsId: 'jenkins-user', url: 'https://ds1.capetown.gov.za/ds_gitlab/OPM/cct-superset.git'
         }
         stage('image-build') {
             retry(3) {
