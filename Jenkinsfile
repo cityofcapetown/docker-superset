@@ -62,19 +62,29 @@ podTemplate(label: label, yaml: """
                 updateGitlabCommitStatus name: 'deploy-config', state: 'success'
             }
         }
-        stage('app redeploy') {
+        stage('app deploy') {
             if (env.BRANCH_NAME != 'main') {
                 container('kubectl') {
                     sh '''
                     # swap out the docker image tag for the current branch
                     export SAFE_BRANCH_NAME=$(echo $BRANCH_NAME | sed 's#/#-#g')
-                    sed -i 's|image: "cityofcapetown/superset:dev"|image: "cityofcapetown/superset:'${SAFE_BRANCH_NAME}'"|g" ${PWD}/k8s/superset-dev.yaml
+                    sed -i 's|image: "cityofcapetown/superset:dev"|image: "cityofcapetown/superset:'${SAFE_BRANCH_NAME}'"|g' ${PWD}/k8s/superset-dev.yaml
                     grep "image:" ${PWD}/k8s/superset-dev.yaml
 
+                    # applying the config
+                    kubectl delete job -n superset-dev superset-init-db
+                    kubectl apply -f ${PWD}/k8s/superset-dev.yaml
+
+                    # restarting the pods
                     kubectl rollout restart statefulset -n superset-dev superset-redis-master superset-postgresql
                     kubectl rollout restart deployment -n superset-dev superset-worker superset superset-celerybeat
-                    kubectl rollout status statefulset -n superset-dev superset-redis-master superset-postgresql --timeout=300s
-                    kubectl rollout status deployment -n superset-dev superset-worker superset superset-celerybeat --timeout=300s
+
+                    # waiting for them to come back up
+                    kubectl rollout status statefulset -n superset-dev superset-postgresql --timeout=300s
+                    kubectl rollout status statefulset -n superset-dev superset-redis-master --timeout=300s
+                    kubectl rollout status deployment -n superset-dev superset-celerybeat --timeout=300s
+                    kubectl rollout status deployment -n superset-dev superset-worker --timeout=300s
+                    kubectl rollout status deployment -n superset-dev superset --timeout=300s
                     '''
                 }
                 updateGitlabCommitStatus name: 'deploy', state: 'success'
